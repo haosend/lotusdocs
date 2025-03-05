@@ -11,6 +11,18 @@
     <meta name="email" content="support@aigis.uk" />
     <meta name="website" content="https://lotusdocs.dev" />
     <meta name="Version" content="v0.1.0" />
+
+    <!-- Preload Resources -->
+    <link rel="preload" href="{{ .Site.BaseURL }}fonts/your-font.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ .Site.BaseURL }}images/favicon.ico" as="image">
+    {{- $style := resources.Get "/scss/style.scss" }}
+    {{- $style = $style | resources.ExecuteAsTemplate "/scss/style.scss" . | css.Sass $options }}
+    {{- if hugo.IsProduction }}
+        {{- $style = $style | minify | fingerprint "sha384" }}
+    {{- end -}}
+    <link rel="preload" href="{{ $style.RelPermalink }}" as="style">
+    <link rel="preload" href="{{ $js.RelPermalink }}" as="script">
+
     <!-- favicon -->
     {{ block "head/favicon" . }}{{ partialCached "head/favicon.html" . }}{{ end }}
     <!-- Google Fonts -->
